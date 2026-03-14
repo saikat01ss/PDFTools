@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./assets/icon.svg" sizes="any" type="image/svg+xml">
+    <title>PDF Organizer</title>
+    <link rel="stylesheet" href="./css/all.min.css">
+    <script src="./js/pdf.min.js"></script>
+    <script src="./js/pdf-lib.min.js"></script>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <div id="loader">
+        <i class="fas fa-spinner fa-spin loader-icon"></i>
+        <h2 class="loader-title">Processing PDF...</h2>
+        <p class="loader-sub">Please wait while we read the pages.</p>
+    </div>
+
+    <div class="main-area" id="main-area">
+        <div id="empty-state" class="empty-state">
+            <i class="fas fa-file-pdf empty-icon"></i>
+            <h3 class="empty-title">No PDFs loaded</h3>
+            <p>Click the red + button to import documents.</p>
+        </div>
+
+        <div id="page-grid" class="page-grid hidden"></div>
+
+        <div class="fab-container">
+            <button onclick="document.getElementById('file-upload').click()" class="fab-btn" title="Add PDF">
+                <i class="fas fa-plus fab-plus"></i>
+                <span class="file-count-badge hidden" id="file-count-badge">0</span>
+            </button>
+            <button onclick="zoomIn()" class="fab-btn fab-zoom" title="Zoom in (bigger pages)">
+                <i class="fas fa-search-plus"></i>
+            </button>
+            <button onclick="zoomOut()" class="fab-btn fab-zoom" title="Zoom out (smaller pages)">
+                <i class="fas fa-search-minus"></i>
+            </button>
+            <input type="file" id="file-upload" class="hidden" multiple accept="application/pdf"
+                onchange="handleFileUpload(event)">
+        </div>
+    </div>
+
+    <!-- Selection action bar -->
+    <div id="selection-bar" class="selection-bar hidden">
+        <label class="sel-bar-select-all" title="Select / deselect all pages">
+            <input type="checkbox" id="select-all-cb"
+                   onchange="this.checked ? selectAllPages() : clearSelection()">
+            <span>All</span>
+        </label>
+        <div class="sel-bar-separator"></div>
+        <span class="sel-bar-label" id="selection-count">0 pages selected</span>
+        <button onclick="rotateSelected(1)" class="sel-bar-btn" title="Rotate selected pages clockwise">
+            <i class="fas fa-rotate-right"></i> Rotate CW
+        </button>
+        <div class="sel-bar-separator"></div>
+        <button onclick="rotateSelected(-1)" class="sel-bar-btn" title="Rotate selected pages anti-clockwise">
+            <i class="fas fa-rotate-left"></i> Rotate CCW
+        </button>
+        <div class="sel-bar-separator"></div>
+        <button onclick="deleteSelected()" class="sel-bar-btn danger" title="Delete selected pages">
+            <i class="fas fa-trash-alt"></i> Delete
+        </button>
+        <div class="sel-bar-separator"></div>
+        <button onclick="clearSelection()" class="sel-bar-btn" title="Clear selection">
+            <i class="fas fa-times"></i> Deselect
+        </button>
+    </div>
+
+    <!-- Fullscreen page preview overlay -->
+    <div id="page-preview-overlay" class="page-preview-overlay hidden" onclick="closePagePreview()">
+        <div class="page-preview-content" onclick="event.stopPropagation()">
+            <button class="page-preview-close" onclick="closePagePreview()" title="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <canvas id="page-preview-canvas" class="page-preview-canvas"></canvas>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Organize PDFs</h2>
+            <h3 class="sidebar-subtitle">Merge | Split | Rotate | Organize</h3>
+        </div>
+
+        <div class="sidebar-body">
+            <div>
+                <div class="files-header">
+                    <span class="files-label">Files:</span>
+                    <button class="reset-btn" onclick="resetAll()">Reset all</button>
+                </div>
+                <div id="file-list" class="file-list">No files selected.</div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="extract-card">
+                <h3 class="extract-title"><i class="fas fa-file-export extract-icon"></i>Extract Pages</h3>
+                <p id="extraction-filename" class="extraction-filename"></p>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="extract-mode" value="all" checked class="radio-input"> Extract all
+                        active pages
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="extract-mode" value="custom" class="radio-input"
+                            id="custom-range-radio"> Custom range
+                    </label>
+                </div>
+                <div class="range-input-wrap">
+                    <input type="text" id="custom-range-input" placeholder="e.g., A1-A5, A8, B1-B5" class="range-input"
+                        disabled>
+                    <p class="range-hint">Use labels shown on each page (A1, A2 for 1st PDF; B1, B2 for 2nd PDF, etc.)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <button class="download-btn" onclick="organizeAndExport()">
+                Download PDF <i class="fas fa-download"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="./js/script.js"></script>
+</body>
+
+</html>
