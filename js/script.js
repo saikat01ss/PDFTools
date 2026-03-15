@@ -164,7 +164,7 @@ function cardHeight() {
 
 function desiredRenderScale() {
     const ratio = cardHeight() / BASE_HEIGHT;
-    console.log("ratio - " + ratio);
+    // console.log("ratio - " + ratio);
     return Math.min(1.5, Math.max(0.3, 0.5 * ratio));
 }
 
@@ -195,7 +195,7 @@ async function rerenderVisible() {
     const promises = pagesState.map(async (page) => {
         if (page.isBlank) return;
         const cached = thumbnailCache[page.id];
-        console.log("cached.scale - " + cached.scale);
+        // console.log("cached.scale - " + cached.scale);
         if (cached && cached.scale >= scale - 0.2) return;
         await renderPageThumbnail(page, scale);
     });
@@ -208,7 +208,7 @@ async function rerenderVisible() {
 async function renderPageThumbnail(pageObj, scale) {
     if (!uploadedFiles[pageObj.fileId]) return;
     try {
-        console.log("Rendering in scale - " + scale);
+        // console.log("Rendering in scale - " + scale);
         const bytes = uploadedFiles[pageObj.fileId].bytes.slice(0);
         const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
         const page = await pdf.getPage(pageObj.originalPageNum);
