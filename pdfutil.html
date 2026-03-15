@@ -47,26 +47,25 @@
     <!-- Selection action bar -->
     <div id="selection-bar" class="selection-bar hidden">
         <label class="sel-bar-select-all" title="Select / deselect all pages">
-            <input type="checkbox" id="select-all-cb"
-                   onchange="this.checked ? selectAllPages() : clearSelection()">
+            <input type="checkbox" id="select-all-cb" onchange="this.checked ? selectAllPages() : clearSelection()">
             <span>All</span>
         </label>
         <div class="sel-bar-separator"></div>
-        <span class="sel-bar-label" id="selection-count">0 pages selected</span>
+        <span class="sel-bar-label" id="selection-count">0 pages</span>
         <button onclick="rotateSelected(1)" class="sel-bar-btn" title="Rotate selected pages clockwise">
-            <i class="fas fa-rotate-right"></i> Rotate CW
+            <i class="fas fa-rotate-right"></i>
         </button>
         <div class="sel-bar-separator"></div>
         <button onclick="rotateSelected(-1)" class="sel-bar-btn" title="Rotate selected pages anti-clockwise">
-            <i class="fas fa-rotate-left"></i> Rotate CCW
+            <i class="fas fa-rotate-left"></i>
         </button>
         <div class="sel-bar-separator"></div>
         <button onclick="deleteSelected()" class="sel-bar-btn danger" title="Delete selected pages">
-            <i class="fas fa-trash-alt"></i> Delete
+            <i class="fas fa-trash-alt"></i>
         </button>
         <div class="sel-bar-separator"></div>
         <button onclick="clearSelection()" class="sel-bar-btn" title="Clear selection">
-            <i class="fas fa-times"></i> Deselect
+            <i class="fas fa-times"></i>
         </button>
     </div>
 
@@ -113,7 +112,8 @@
                 <div class="range-input-wrap">
                     <input type="text" id="custom-range-input" placeholder="e.g., A1-A5, A8, B1-B5" class="range-input"
                         disabled>
-                    <p class="range-hint">Use labels shown on each page (A1, A2 for 1st PDF; B1, B2 for 2nd PDF, etc.)</p>
+                    <p class="range-hint">Use labels shown on each page (A1, A2 for 1st PDF; B1, B2 for 2nd PDF, etc.)
+                    </p>
                 </div>
             </div>
         </div>

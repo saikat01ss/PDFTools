@@ -10,6 +10,7 @@ let uploadedFiles = {};   // fileId -> { name, bytes, label }   label = 'A','B',
 let pagesState = [];   // current visual order of pages
 let fileIdCounter = 0;
 let pageIdCounter = 0;
+let outputFileName = "Organized_Document.pdf";
 
 // Zoom state: number of grid columns (1-8)
 const BASE_HEIGHT = 256;   // px
@@ -163,7 +164,8 @@ function cardHeight() {
 
 function desiredRenderScale() {
     const ratio = cardHeight() / BASE_HEIGHT;
-    return Math.min(2.0, Math.max(0.3, 0.5 * ratio));
+    console.log("ratio - " + ratio);
+    return Math.min(1.5, Math.max(0.3, 0.5 * ratio));
 }
 
 function applyGridStyle() {
@@ -193,7 +195,8 @@ async function rerenderVisible() {
     const promises = pagesState.map(async (page) => {
         if (page.isBlank) return;
         const cached = thumbnailCache[page.id];
-        if (cached && cached.scale >= scale - 0.01) return;
+        console.log("cached.scale - " + cached.scale);
+        if (cached && cached.scale >= scale - 0.2) return;
         await renderPageThumbnail(page, scale);
     });
     await Promise.all(promises);
@@ -205,6 +208,7 @@ async function rerenderVisible() {
 async function renderPageThumbnail(pageObj, scale) {
     if (!uploadedFiles[pageObj.fileId]) return;
     try {
+        console.log("Rendering in scale - " + scale);
         const bytes = uploadedFiles[pageObj.fileId].bytes.slice(0);
         const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
         const page = await pdf.getPage(pageObj.originalPageNum);
@@ -300,11 +304,12 @@ function updateUI() {
     if (fileKeys.length > 0) {
         badge.classList.remove('hidden');
         badge.innerText = fileKeys.length;
-        extractionFilename.innerText = `(${uploadedFiles[fileKeys[0]].name})`;
+        extractionFilename.innerText = `Output : Organized-${uploadedFiles[fileKeys[0]].name}`;
+        outputFileName = `Organized-${uploadedFiles[fileKeys[0]].name}`;
         fileListElement.innerHTML = fileKeys.map(key => `
             <div class="file-item">
                 <span class="file-item-name" title="${uploadedFiles[key].name}">
-                    <i class="fas fa-file-pdf file-item-icon"></i>${uploadedFiles[key].label}: ${uploadedFiles[key].name}
+                    <i class="fas fa-file-pdf file-item-icon"></i>${uploadedFiles[key].label} → ${uploadedFiles[key].name}
                 </span>
                 <button onclick="deleteFile('${key}')" class="file-delete-btn" title="Remove this file">
                     <i class="fas fa-trash-alt"></i>
@@ -501,7 +506,7 @@ function buildSelectionRangeString() {
 
     const parts = [];
     let rangeStart = selected[0];
-    let rangePrev  = selected[0];
+    let rangePrev = selected[0];
 
     const flushRange = (start, end) => {
         const sl = getPageLabel(start);
@@ -519,7 +524,7 @@ function buildSelectionRangeString() {
     for (let i = 1; i < selected.length; i++) {
         const cur = selected[i];
         const prevLabel = getPageLabel(rangePrev);
-        const curLabel  = getPageLabel(cur);
+        const curLabel = getPageLabel(cur);
         const pm = prevLabel.match(/^([A-Z]+)(\d+)$/);
         const cm = curLabel.match(/^([A-Z]+)(\d+)$/);
         const consecutive = pm && cm
@@ -530,7 +535,7 @@ function buildSelectionRangeString() {
         } else {
             flushRange(rangeStart, rangePrev);
             rangeStart = cur;
-            rangePrev  = cur;
+            rangePrev = cur;
         }
     }
     flushRange(rangeStart, rangePrev);
@@ -546,7 +551,7 @@ function syncCustomRangeToSelection() {
     _updatingFieldFromSelection = true;
 
     const customRadio = document.getElementById('custom-range-radio');
-    const allRadio    = document.querySelector('input[name="extract-mode"][value="all"]');
+    const allRadio = document.querySelector('input[name="extract-mode"][value="all"]');
 
     if (selectedPageIds.size > 0) {
         // Switch to custom mode and populate field
@@ -618,7 +623,7 @@ function updateSelectionBar() {
     if (selectedPageIds.size > 0) {
         bar.classList.remove('hidden');
         document.getElementById('selection-count').textContent =
-            `${selectedPageIds.size} page${selectedPageIds.size > 1 ? 's' : ''} selected`;
+            `${selectedPageIds.size} page${selectedPageIds.size > 1 ? 's' : ''}`;
     } else {
         bar.classList.add('hidden');
     }
@@ -1014,7 +1019,7 @@ async function organizeAndExport() {
         const bytes = await finalPdf.save();
         const a = Object.assign(document.createElement('a'), {
             href: URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' })),
-            download: 'Organized_Document.pdf'
+            download: outputFileName
         });
         a.click();
     } catch (err) {

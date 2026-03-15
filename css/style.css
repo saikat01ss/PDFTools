@@ -682,7 +682,7 @@ body.loading #loader {
     width: 1.5rem;
     height: 1.5rem;
     border-radius: var(--radius-full);
-    background-color: rgba(255,255,255,0.85);
+    background-color: rgba(255, 255, 255, 0.85);
     border: 2px solid var(--clr-gray-300);
     display: flex;
     align-items: center;
@@ -694,7 +694,7 @@ body.loading #loader {
     cursor: pointer;
     pointer-events: all;
     transition: opacity var(--transition), background-color var(--transition),
-                border-color var(--transition), color var(--transition);
+        border-color var(--transition), color var(--transition);
 }
 
 .group:hover .select-indicator {
@@ -750,8 +750,8 @@ body.loading #loader {
     position: fixed;
     bottom: 1.5rem;
     left: 50%;
-    transform: translateX(-50%);
-    background-color: #1e293b;
+    transform: translateX(-100%);
+    background-color: #000000c0;
     color: #fff;
     padding: 0.625rem 1rem;
     border-radius: var(--radius-full);
@@ -766,14 +766,21 @@ body.loading #loader {
 }
 
 @keyframes slideUp {
-    from { opacity: 0; transform: translateX(-50%) translateY(12px); }
-    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateX(-100%) translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(-100%) translateY(0);
+    }
 }
 
 .sel-bar-label {
     font-weight: 600;
     padding-right: 0.5rem;
-    border-right: 1px solid rgba(255,255,255,0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* Instruction 5: Select-All checkbox in the selection bar */
@@ -815,7 +822,7 @@ body.loading #loader {
 }
 
 .sel-bar-btn:hover {
-    background-color: rgba(255,255,255,0.1);
+    background-color: rgba(255, 255, 255, 0.1);
     color: #fff;
 }
 
@@ -827,7 +834,7 @@ body.loading #loader {
 .sel-bar-separator {
     width: 1px;
     height: 1.25rem;
-    background-color: rgba(255,255,255,0.15);
+    background-color: rgba(255, 255, 255, 0.15);
 }
 
 /* Thumbnail preview area */
@@ -960,8 +967,13 @@ body.loading #loader {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .page-preview-content {
@@ -974,7 +986,7 @@ body.loading #loader {
     background: #fff;
     border-radius: var(--radius-lg);
     padding: 1rem;
-    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
 }
 
 .page-preview-canvas {
@@ -1006,4 +1018,4 @@ body.loading #loader {
 
 .page-preview-close:hover {
     background-color: var(--clr-primary);
-}
+}
